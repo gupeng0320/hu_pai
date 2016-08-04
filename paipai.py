@@ -18,6 +18,10 @@ import ctypes
 #sys.path.append(r"d:\softwares\Python27\Lib\site-packages\asprise_ocr_api")
 #from asprise_ocr_api import *
 
+'''
+add a test message
+'''
+
 global is_finish_yanzhengma
 global is_ie_already_run
 is_ie_already_run = False
@@ -110,6 +114,7 @@ class PaipaiMgr():
         pyautogui.moveTo(self.position_delta_price[0], self.position_delta_price[1])
         pyautogui.click()
         pyautogui.typewrite(chr(8) * 5 + price)
+        
 
     def get_current_price(self, image, rangle):
         #price_part = image.crop(rangle).convert('1')
