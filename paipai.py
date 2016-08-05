@@ -95,7 +95,7 @@ class PaipaiMgr():
             os.environ["webdriver.ie.driver"] = self.iedriver
             self.driver = webdriver.Ie(self.iedriver)
             self.driver.get("http://moni.51hupai.org/?new=13")
-            self.driver.set_window_size(920,930)
+            self.driver.set_window_size(1000,930)
             time.sleep(2)
 
         #hwnd = win32gui.WindowFromPoint((300, 300))
@@ -271,16 +271,17 @@ class PaipaiMgr():
             self.driver.quit()
         self.ocrEngine.stop_engine()
 
-    def validate_ie(self, hwnd,mouse):
+    def validate_ie(self, hwnd, mouse):
         #if win32gui.IsWindow(hwnd) and win32gui.IsWindowEnabled(hwnd) and win32gui.IsWindowVisible(hwnd):
         if win32gui.IsWindow(hwnd) and win32gui.IsWindowEnabled(hwnd) and win32gui.IsWindowVisible(hwnd):
-            #print "--- title is %s, name is %s, hwnd is %s" % (win32gui.GetWindowText(hwnd), win32gui.GetClassName(hwnd), hwnd)
-            #print "--- name is %s, hwnd is %s" % (win32gui.GetClassName(hwnd), hwnd)
-            #print "--- text  is %s, hwnd is %s" % ((win32gui.GetWindowText(hwnd).decode('gbk').encode('utf-8')), hwnd)
-            if self.ie_title == win32gui.GetWindowText(hwnd).decode('gbk').encode('utf-8'):
+            print "--- title is %s, name is %s, hwnd is %s" % (win32gui.GetWindowText(hwnd), win32gui.GetClassName(hwnd), hwnd)
+            print "--- name is %s, hwnd is %s" % (win32gui.GetClassName(hwnd), hwnd)
+            print "--- text  is %s, hwnd is %s" % ((win32gui.GetWindowText(hwnd).decode('gbk').encode('utf-8')), hwnd)
+            #if self.ie_title == win32gui.GetWindowText(hwnd).decode('gbk').encode('utf-8'):
+            if win32gui.GetClassName(hwnd) == "Internet Explorer_Hidden":
                 global is_ie_already_run
                 is_ie_already_run = True
-                print "[INFO] text  is %s, paipai already run!" % ((win32gui.GetWindowText(hwnd).decode('gbk').encode('utf-8')))
+                print "[INFO] name is %s, IE already run!" % ((win32gui.GetClassName(hwnd)))
 
 def onKeyboardEvent(event):
     '''
@@ -366,6 +367,6 @@ if __name__ == '__main__':
     #AspriseOCR = ctypes.windll.LoadLibrary(r":\gupeng\software\Python27\Lib\site-packages\asprise_ocr_api\AspriseOcr.dll")
 
     paipai = PaipaiMgr()
-    #paipai.test_mouse_position()
-    paipai.execute()
-    paipai.exit()
+    paipai.test_mouse_position()
+    #paipai.execute()
+    #paipai.exit()
