@@ -15,13 +15,6 @@ import win32gui
 import time,httplib
 import ctypes
 
-#sys.path.append(r"d:\softwares\Python27\Lib\site-packages\asprise_ocr_api")
-#from asprise_ocr_api import *
-
-'''
-add a test message
-'''
-
 global is_finish_yanzhengma
 global is_ie_already_run
 is_ie_already_run = False
@@ -57,8 +50,6 @@ class PaipaiMgr():
         #self.ocrEngine.input_license("123456", "123456789123456789123456789")
         self.ocrEngine.start_engine("eng")
         '''
-
-
         self.start()
 
     def test_mouse_position(self):
@@ -253,23 +244,11 @@ class PaipaiMgr():
                     im = ImageGrab.grab()
                     max_price = self.get_current_price(im, self.current_max_price_rangle)
 
-                print "#########################please sublmit!!!!!!!!!!!!!!!!!!"
-                print "#########################please sublmit!!!!!!!!!!!!!!!!!!"
-                print "#########################please sublmit!!!!!!!!!!!!!!!!!!"
-                print "#########################please sublmit!!!!!!!!!!!!!!!!!!"
-                print "#########################please sublmit!!!!!!!!!!!!!!!!!!"
-                print "#########################please sublmit!!!!!!!!!!!!!!!!!!"
-                print "#########################please sublmit!!!!!!!!!!!!!!!!!!"
-                print "#########################please sublmit!!!!!!!!!!!!!!!!!!"
-                print "#########################please sublmit!!!!!!!!!!!!!!!!!!"
-                print "#########################please sublmit!!!!!!!!!!!!!!!!!!"
-                print "#########################please sublmit!!!!!!!!!!!!!!!!!!"
-                print "#########################please sublmit!!!!!!!!!!!!!!!!!!"
-                print "#########################please sublmit!!!!!!!!!!!!!!!!!!"
-                print "#########################please sublmit!!!!!!!!!!!!!!!!!!"
-                print "#########################please sublmit!!!!!!!!!!!!!!!!!!"
-                print "#########################please sublmit!!!!!!!!!!!!!!!!!!"
-                print "#########################please sublmit!!!!!!!!!!!!!!!!!!"
+                print "#########################please submit!!!!!!!!!!!!!!!!!!"
+                print "#########################please submit!!!!!!!!!!!!!!!!!!"
+                print "#########################please submit!!!!!!!!!!!!!!!!!!"
+                print "#########################please submit!!!!!!!!!!!!!!!!!!"
+                print "#########################please submit!!!!!!!!!!!!!!!!!!"
                 '''
                 pyautogui.moveTo(self.position_ok_after_submit_price[0], self.position_ok_after_submit_price[1])
                 pyautogui.click()
@@ -385,137 +364,8 @@ if __name__ == '__main__':
     #os.system("tesseract.exe e:\projects\paipai\price_47.png result -l num")
     #print("%s" % datetime.datetime.n700
     #AspriseOCR = ctypes.windll.LoadLibrary(r":\gupeng\software\Python27\Lib\site-packages\asprise_ocr_api\AspriseOcr.dll")
-    '''
-    AspriseOCR = ctypes.WinDLL(r":\gupeng\software\Python27\Lib\site-packages\asprise_ocr_api\AspriseOcr.dll")
-    print dir(AspriseOCR)
-    '''
+
     paipai = PaipaiMgr()
     #paipai.test_mouse_position()
     paipai.execute()
     paipai.exit()
-
-    '''
-    hm = pyHook.HookManager()
-    hm.KeyDown = onKeyboardEvent
-    hm.HookKeyboard()
-    #pythoncom.PumpMessages()
-    global is_finish_yanzhengma
-    is_finish_yanzhengma = False
-    while is_finish_yanzhengma == False:
-        pythoncom.PumpWaitingMessages()
-        #pythoncom.PumpMessages()
-
-
-
-    #driver=webdriver.Ie()
-    driver.get("http://www.baidu.com");
-    driver.find_element_by_id("kw").send_keys("selenium");
-    driver.find-element_by_id("su").click();
-    driver.close();
-
-    driver.get("http://www.python.org")
-    assert "Python" in driver.title
-    elem = driver.find_element_by_name("q")
-    elem.send_keys("selenium")
-    elem.send_keys(Keys.RETURN)
-    #assert "Google" in driver.title
-    driver.close()
-    driver.quit()
-
-    pwd = "53443606 5651"
-
-    #driver.get("http://www.baidu.com")
-
-    #driver.maximize_window()
-    #time_rangle = (350, 515, 500, 532)
-    #current_price_rangle = (375, 530, 500, 547)
-
-    #current_price_rangle = (160, 539, 220, 555)
-
-
-
-
-
-    i = 0
-    while(1):
-    #for i in xrange(0, 20):
-        #price_pic = r'e:\projects\paipai\price_%s.png' %i
-        #print("----------\n%s" % datetime.datetime.now())
-
-        #print("%s" % datetime.datetime.now())
-        #im.save(whole_pic,'png')
-        #im.show()
-
-        #time_part = im.crop(time_rangle).convert('L')
-
-        #time_now = pytesser.image_to_string(time_part).strip()
-
-
-        #print("%s" % datetime.datetime.now())
-
-        if time_now == input_price_time:
-            print(input_price_time, ": input price!!")
-            pyautogui.moveTo(820, 450)
-            pyautogui.click()
-            pyautogui.moveTo(820, 560)
-            pyautogui.click()
-
-
-
-        #os.chdir('C:\gupeng\software\Python27\Lib\site-packages\pytesseract')
-        #text=pytesseract.image_to_string(time_part)
-        #test_pic = Image.open(r"C:\gupeng\software\Python27\Lib\site-packages\pytesseract\test.png")
-        #text=pytesseract.image_to_string(test_pic).strip()
-        #print("content is: ", text)
-        #print("00 - %s\n" % datetime.datetime.now())
-        #price_part = im.crop(current_price_rangle).convert('L')
-
-        #print("11 - %s\n" % datetime.datetime.now())
-
-        #price = pytesser.image_to_string(price_part).strip()
-        #print("22 - %s\n" % datetime.datetime.now())
-
-        #print("33 - %s\n" % datetime.datetime.now())
-
-        #time.sleep(1)
-        #break
-
-        if 0:
-            pyautogui.moveTo(710, 450)
-            pyautogui.click()
-            pyautogui.typewrite(chr(8) * 5 + "%s" % i + "00")
-            pyautogui.moveTo(820, 450)
-            pyautogui.click()
-            pyautogui.moveTo(820, 560)
-            pyautogui.click()
-
-            time.sleep(5)
-            pyautogui.moveTo(580, 610)
-            pyautogui.click()
-
-            time.sleep(3)
-            pyautogui.moveTo(620, 610)
-            pyautogui.click()
-
-            time.sleep(5)
-
-        i = i+1
-        if time_now == "11:29:20":
-            break
-    print("i = ", i)
-
-    driver.quit()
-
-
-    driver.save_screenshot(time_pic)
-    time_ele = Image.open(time_pic)
-    text=pytesseract.image_to_string(time_ele).strip()
-    print("content is: text)
-
-    #time.sleep(0.3)
-    #driver.find_element_by_id("kw").send_keys("selenium")
-    #driver.find_element_by_id("su").click()
-    #time.sleep(3)
-    #driver.quit()
-
-    '''
