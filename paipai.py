@@ -28,7 +28,6 @@ class PaipaiMgr():
         self.price_pic = r'Ce:\projects\paipai\price.bmp'
         self.input_price_time = "11:29:10"
         self.time_rangle = (135, 525, 210, 540)
-        self.submit_price_rangle = (681, 397, 732, 422)
 
         self.position_delta_price = [780, 440]
         self.position_max_price = [333, 556]
@@ -39,8 +38,11 @@ class PaipaiMgr():
         self.position_ok_after_submit_price = [600, 620]
         self.position_refresh_yanzhengma= [580, 550]
         #self.position_cancel_after_submit_price= [790, 610]
-        self.position_cancel_after_submit_price= [790, 620]
+        self.position_cancel_after_submit_price = [790, 620]
+        self.position_ok_after_accept_price = [700, 600]
+
         self.current_max_price_rangle = (self.position_max_price[0], self.position_max_price[1], self.position_max_price[0] + 42, self.position_max_price[1] + 15)
+        self.submit_price_rangle = (self.position_my_price[0], self.position_my_price[1], self.position_my_price[0]+51, self.position_my_price[1] + 25)
 
         self.ie_title = "51沪牌模拟拍牌系统 - Windows Internet Explorer"
         self.driver = ''
@@ -245,8 +247,10 @@ class PaipaiMgr():
 
                 im = ImageGrab.grab()
                 submit_price = self.get_current_price(im, self.submit_price_rangle).replace(' ', '')
-                max_price = self.get_current_price(im, self.current_max_price_rangle).replace(' ', '')
                 print "submit:" , submit_price
+                #pyautogui.moveTo(self.position_submit_price[0], self.position_submit_price[1])
+
+                max_price = self.get_current_price(im, self.current_max_price_rangle).replace(' ', '')
                 print "submit:" , max_price
 
                 while(int(submit_price) > int(max_price)):
@@ -259,7 +263,7 @@ class PaipaiMgr():
                 print "#########################please submit!!!!!!!!!!!!!!!!!!"
                 print "#########################please submit!!!!!!!!!!!!!!!!!!"
                 print "#########################please submit!!!!!!!!!!!!!!!!!!"
-                '''
+
                 pyautogui.moveTo(self.position_ok_after_submit_price[0], self.position_ok_after_submit_price[1])
                 pyautogui.click()
 
@@ -269,13 +273,11 @@ class PaipaiMgr():
 
                 print "server accept price submit"
                 #time.sleep(3)
+
                 #enter after server admit my request
-                pyautogui.moveTo(620, 610)
+                pyautogui.moveTo(self.position_ok_after_accept_price[0], self.position_ok_after_accept_price[1])
                 pyautogui.click()
 
-                #pyautogui.password()
-                break
-                '''
     def exit(self):
         if(self.driver):
             self.driver.quit()
