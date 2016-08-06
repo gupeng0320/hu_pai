@@ -28,19 +28,20 @@ class PaipaiMgr():
         self.price_pic = r'Ce:\projects\paipai\price.bmp'
         self.input_price_time = "11:29:10"
         self.time_rangle = (135, 525, 210, 540)
-        self.current_max_price_rangle = (288, 575, 330, 590)
         self.submit_price_rangle = (681, 397, 732, 422)
 
-        self.position_delta_price = [710, 450]
-        self.position_max_price = [287, 569]
-        self.position_my_price = [683, 397]
-        self.position_add_price = [815, 448]
-        self.position_submit_price = [820, 560]
+        self.position_delta_price = [780, 440]
+        self.position_max_price = [333, 556]
+        self.position_my_price = [727, 380]
+        self.position_add_price = [850, 430]
+        self.position_submit_price = [850, 540]
         #self.position_ok_after_submit_price = [580, 610]
-        self.position_ok_after_submit_price = [580, 630]
+        self.position_ok_after_submit_price = [600, 620]
         self.position_refresh_yanzhengma= [580, 550]
         #self.position_cancel_after_submit_price= [790, 610]
-        self.position_cancel_after_submit_price= [790, 630]
+        self.position_cancel_after_submit_price= [790, 620]
+        self.current_max_price_rangle = (self.position_max_price[0], self.position_max_price[1], self.position_max_price[0] + 42, self.position_max_price[1] + 15)
+
         self.ie_title = "51沪牌模拟拍牌系统 - Windows Internet Explorer"
         self.driver = ''
 
@@ -55,26 +56,35 @@ class PaipaiMgr():
     def test_mouse_position(self):
         while 1:
             self.add_price("700")
+            print "delta price"
             pyautogui.moveTo(self.position_delta_price[0], self.position_delta_price[1])
             time.sleep(1)
+            print "max price"
             pyautogui.moveTo(self.position_max_price[0], self.position_max_price[1])
             time.sleep(1)
+            print "add price"
             pyautogui.moveTo(self.position_add_price[0], self.position_add_price[1])
             pyautogui.click()
             time.sleep(1)
+            print "submit price"
             pyautogui.moveTo(self.position_submit_price[0], self.position_submit_price[1])
             pyautogui.click()
             time.sleep(1)
+            print "position_ok_after_submit_price"
             pyautogui.moveTo(self.position_ok_after_submit_price[0], self.position_ok_after_submit_price[1])
             time.sleep(1)
+            print "position_my_price"
             pyautogui.moveTo(self.position_my_price[0], self.position_my_price[1])
             time.sleep(1)
+            print "position_refresh_yanzhengma"
             pyautogui.moveTo(self.position_refresh_yanzhengma[0], self.position_refresh_yanzhengma[1])
             pyautogui.click()
             time.sleep(1)
+            print "position_cancel_after_submit_price"
             pyautogui.moveTo(self.position_cancel_after_submit_price[0], self.position_cancel_after_submit_price[1])
             pyautogui.click()
-            time.sleep(5)
+
+            time.sleep(2)
 
     def start(self):
         '''
@@ -104,7 +114,7 @@ class PaipaiMgr():
     def add_price(self, price):
         pyautogui.moveTo(self.position_delta_price[0], self.position_delta_price[1])
         pyautogui.click()
-        pyautogui.typewrite(chr(8) * 5 + price)
+        pyautogui.typewrite(chr(8) * 10 + price)
         
 
     def get_current_price(self, image, rangle):
@@ -112,7 +122,7 @@ class PaipaiMgr():
         price_part = image.crop(rangle).convert('L')
         price_part = price_part.resize((240, 120))
         price_part = price_part.convert("RGBA")
-        print price_part.format, price_part.size, price_part.mode, price_part.info
+        #print price_part.format, price_part.size, price_part.mode, price_part.info
 
         for i in xrange(0,1):
             price_part = price_part.filter(ImageFilter.EDGE_ENHANCE)
@@ -130,12 +140,12 @@ class PaipaiMgr():
             #price_part.save(path, 'bmp')
         #price_part.show()
 
-        #print("tessact price start %s" % datetime.now())
+        #print("tessact price start %s" % datetime.datetime.now())
         price = pytesseract.image_to_string(price_part, lang="num", config="-psm 7").strip().replace(' ', '')
-        #print("tessact price end %s" % datetime.now())
+        #print("tessact price end %s" % datetime.datetime.now())
         #print("current price is: %s\n" % price)
         #self.price_pic = r'e:\projects\paipai\price_%s.png' % i
-        #price_part.save(r'e:\projects\paipai\price_111.png', 'bmp')
+        #price_part.save(r'e:\projects\code\hu_pai\price.bmp', 'bmp')
         '''
         price_part.save(self.price_pic, 'bmp')
         #price_part.show()
@@ -202,11 +212,11 @@ class PaipaiMgr():
             [hour_now, minute_now, second_now] = time_now.split(":")
 
             price = self.get_current_price(im, self.current_max_price_rangle)
-            print("current price is: %s, %s\n" % (price, type(price)))
+            print"current price is:     [====    %s    ====]\n" % price
 
             self.input_price_time = "11:29:47"
-            if time_now == self.input_price_time:
-            #if second_now[1] == "8":
+            #if time_now == self.input_price_time:
+            if second_now[1] == "8":
                 print(self.input_price_time, ": input price!!")
 
                 #add price and submit
@@ -274,9 +284,9 @@ class PaipaiMgr():
     def validate_ie(self, hwnd, mouse):
         #if win32gui.IsWindow(hwnd) and win32gui.IsWindowEnabled(hwnd) and win32gui.IsWindowVisible(hwnd):
         if win32gui.IsWindow(hwnd) and win32gui.IsWindowEnabled(hwnd) and win32gui.IsWindowVisible(hwnd):
-            print "--- title is %s, name is %s, hwnd is %s" % (win32gui.GetWindowText(hwnd), win32gui.GetClassName(hwnd), hwnd)
-            print "--- name is %s, hwnd is %s" % (win32gui.GetClassName(hwnd), hwnd)
-            print "--- text  is %s, hwnd is %s" % ((win32gui.GetWindowText(hwnd).decode('gbk').encode('utf-8')), hwnd)
+            #print "--- title is %s, name is %s, hwnd is %s" % (win32gui.GetWindowText(hwnd), win32gui.GetClassName(hwnd), hwnd)
+            #print "--- name is %s, hwnd is %s" % (win32gui.GetClassName(hwnd), hwnd)
+            #print "--- text  is %s, hwnd is %s" % ((win32gui.GetWindowText(hwnd).decode('gbk').encode('utf-8')), hwnd)
             #if self.ie_title == win32gui.GetWindowText(hwnd).decode('gbk').encode('utf-8'):
             if win32gui.GetClassName(hwnd) == "Internet Explorer_Hidden":
                 global is_ie_already_run
@@ -367,6 +377,6 @@ if __name__ == '__main__':
     #AspriseOCR = ctypes.windll.LoadLibrary(r":\gupeng\software\Python27\Lib\site-packages\asprise_ocr_api\AspriseOcr.dll")
 
     paipai = PaipaiMgr()
-    paipai.test_mouse_position()
-    #paipai.execute()
-    #paipai.exit()
+    #paipai.test_mouse_position()
+    paipai.execute()
+    paipai.exit()
