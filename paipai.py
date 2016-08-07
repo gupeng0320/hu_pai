@@ -108,6 +108,7 @@ class PaipaiMgr():
         tasks = subprocess.Popen("tasklist", stdin = subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
         #print tasks.stdout.readlines()
 
+        #IEDriverServer.exe
         print "my pid is :", os.getpid()
         for line in tasks.stdout.readlines():
             if "python.exe" in line:
@@ -116,6 +117,7 @@ class PaipaiMgr():
                     result = self.regex_obj.search(line)
                     print "clean environment, kill existed python process:%s" % result.group(1)
                     os.system("taskkill /pid %s" % result.group(1))
+                    os.system("taskkill /F /IM IEDriverServer.exe")
 
         win32gui.EnumWindows(self.validate_ie, 0)
 
@@ -262,11 +264,11 @@ class PaipaiMgr():
 
                 im = ImageGrab.grab()
                 submit_price = self.get_current_price(im, self.submit_price_rangle).replace(' ', '')
-                print "submit:" , submit_price
+                print "submit_price:" , submit_price
                 #pyautogui.moveTo(self.position_submit_price[0], self.position_submit_price[1])
 
                 max_price = self.get_current_price(im, self.current_max_price_rangle).replace(' ', '')
-                print "submit:" , max_price
+                print "max_price:" , max_price
 
                 while(int(submit_price) > int(max_price)):
                     print "submit price %s is bigger than current max price %s, please wait!\n" % (submit_price, max_price)
@@ -287,11 +289,10 @@ class PaipaiMgr():
                 #time.sleep(3)
 
                 #enter after server admit my request
-                pyauto
-                gui.moveTo(self.position_ok_after_accept_price[0], self.position_ok_after_accept_price[1])
+                pyautogui.moveTo(self.position_ok_after_accept_price[0], self.position_ok_after_accept_price[1])
                 pyautogui.click()
                 self.price_submit_shoots += 1
-            else:
+            elif 1 == self.price_submit_shoots:
                 print "try to submit price the second time"
                 self.add_price("")
                 #add price and submit
