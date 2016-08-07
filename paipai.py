@@ -14,6 +14,8 @@ import pythoncom
 import win32gui
 import time,httplib
 import ctypes
+import subprocess
+import re
 
 global is_finish_yanzhengma
 global is_ie_already_run
@@ -46,6 +48,10 @@ class PaipaiMgr():
 
         self.ie_title = "51沪牌模拟拍牌系统 - Windows Internet Explorer"
         self.driver = ''
+        #record which turn to submit the price, cus different strategies
+        self.price_submit_shoots = 0
+        self.regex_str = r"\w+\s+(\d+)\s+"
+        self.regex_obj = re.compile(self.regex_str)
 
         '''
         Ocr.set_up() # one time setup
@@ -99,6 +105,17 @@ class PaipaiMgr():
         print "--- text  is %s, hwnd is %s" % ((win32gui.GetWindowText(hwnd).decode('gbk').encode('utf-8')), hwnd)
         time.sleep(2)
         '''
+        tasks = subprocess.Popen("tasklist", stdin = subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
+        #print tasks.stdout.readlines()
+
+        print "my pid is :", os.getpid()
+        for line in tasks.stdout.readlines():
+            if "python.exe" in line:
+                print line
+                if str(os.getpid()) not in line:
+                    result = self.regex_obj.search(line)
+                    print "clean environment, kill existed python process:%s" % result.group(1)
+                    os.system("taskkill /pid %s" % result.group(1))
 
         win32gui.EnumWindows(self.validate_ie, 0)
 
@@ -187,8 +204,6 @@ class PaipaiMgr():
         print("tessact time end %s" % datetime.now())
         #print("tessact recognize Result: %s" % time_now)
         '''
-
-
         #time_part.show()
         #print("current time is: ", time_now)
         return time_now.strip().replace(' ', '')
@@ -218,7 +233,7 @@ class PaipaiMgr():
 
             self.input_price_time = "11:29:47"
             #if time_now == self.input_price_time:
-            if second_now[1] == "8":
+            if 0 == self.price_submit_shoots and second_now[1] == "8":
                 print(self.input_price_time, ": input price!!")
 
                 #add price and submit
@@ -260,9 +275,6 @@ class PaipaiMgr():
 
                 print "#########################please submit!!!!!!!!!!!!!!!!!!"
                 print "#########################please submit!!!!!!!!!!!!!!!!!!"
-                print "#########################please submit!!!!!!!!!!!!!!!!!!"
-                print "#########################please submit!!!!!!!!!!!!!!!!!!"
-                print "#########################please submit!!!!!!!!!!!!!!!!!!"
 
                 pyautogui.moveTo(self.position_ok_after_submit_price[0], self.position_ok_after_submit_price[1])
                 pyautogui.click()
@@ -275,8 +287,49 @@ class PaipaiMgr():
                 #time.sleep(3)
 
                 #enter after server admit my request
+                pyauto
+                gui.moveTo(self.position_ok_after_accept_price[0], self.position_ok_after_accept_price[1])
+                pyautogui.click()
+                self.price_submit_shoots += 1
+            else:
+                print "try to submit price the second time"
+                self.add_price("")
+                #add price and submit
+                pyautogui.moveTo(self.position_add_price[0], self.position_add_price[1])
+                pyautogui.click()
+                pyautogui.moveTo(self.position_submit_price[0], self.position_submit_price[1])
+                pyautogui.click()
+
+                hm = pyHook.HookManager()
+                hm.KeyDown = onKeyboardEvent
+                hm.HookKeyboard()
+                #pythoncom.PumpMessages()
+                global is_finish_yanzhengma
+                is_finish_yanzhengma = False
+                while is_finish_yanzhengma == False:
+                    pythoncom.PumpWaitingMessages()
+                    #pythoncom.PumpMessages()
+
+                print "user has finish inputing yanzhengma!!"
+
+                im = ImageGrab.grab()
+                submit_price = self.get_current_price(im, self.submit_price_rangle).replace(' ', '')
+                print "submit:" , submit_price
+                #pyautogui.moveTo(self.position_submit_price[0], self.position_submit_price[1])
+
+                pyautogui.moveTo(self.position_ok_after_submit_price[0], self.position_ok_after_submit_price[1])
+                pyautogui.click()
+
+                is_finish_yanzhengma = False
+                while is_finish_yanzhengma == False:
+                    pythoncom.PumpWaitingMessages()
+
+                print "server accept price submit"
+                #time.sleep(3)
+                #enter after server admit my request
                 pyautogui.moveTo(self.position_ok_after_accept_price[0], self.position_ok_after_accept_price[1])
                 pyautogui.click()
+
 
     def exit(self):
         if(self.driver):
@@ -290,7 +343,7 @@ class PaipaiMgr():
             #print "--- name is %s, hwnd is %s" % (win32gui.GetClassName(hwnd), hwnd)
             #print "--- text  is %s, hwnd is %s" % ((win32gui.GetWindowText(hwnd).decode('gbk').encode('utf-8')), hwnd)
             #if self.ie_title == win32gui.GetWindowText(hwnd).decode('gbk').encode('utf-8'):
-            if win32gui.GetClassName(hwnd) == "Internet Explorer_Hidden":
+            if win32gui.GetClassName(hwnd) == "Internet Explorer_Hidden" or "51沪牌模拟拍牌系统 - Internet Explorer" == (win32gui.GetWindowText(hwnd).decode('gbk').encode('utf-8')):
                 global is_ie_already_run
                 is_ie_already_run = True
                 print "[INFO] name is %s, IE already run!" % ((win32gui.GetClassName(hwnd)))
