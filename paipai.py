@@ -252,7 +252,7 @@ class PaipaiMgr():
                 #print "yzm: %s" % yanzhengma
                 #enter after input yanzhengma
                 hm = pyHook.HookManager()
-                hm.KeyDown = onKeyboardEvent
+                hm.KeyDown = self.onKeyboardEvent
                 hm.HookKeyboard()
                 #pythoncom.PumpMessages()
                 global is_finish_yanzhengma
@@ -309,7 +309,7 @@ class PaipaiMgr():
                 pyautogui.click()
 
                 hm = pyHook.HookManager()
-                hm.KeyDown = onKeyboardEvent
+                hm.KeyDown = self.onKeyboardEvent
                 hm.HookKeyboard()
                 #pythoncom.PumpMessages()
                 global is_finish_yanzhengma
@@ -356,30 +356,35 @@ class PaipaiMgr():
                 is_ie_already_run = True
                 print "[INFO] name is %s, IE already run!" % ((win32gui.GetClassName(hwnd)))
 
-def onKeyboardEvent(event):
-    '''
-    print "MessageName:", event.MessageName
-    print "Message:", event.Message
-    print "Time:", event700
-    print "Window:", event.W700
-    print "WindowName:", event.WindowName
-    print "Ascii:", event.Ascii, chr(event.Ascii)
-    print "Key:", event.Key
-    print "KeyID:", event.KeyID
-    print "ScanCode:", event.ScanCode
-    print "Extended:", event.Extended
-    print "Injected:", event.Injected
-    print "Alt", event.Alt
-    print "Transition", event.Transition
-    print "---"
-    '''
-    print "input Key:", event.Key
-    global is_finish_yanzhengma
-    if 13 == event.Ascii:
-        is_finish_yanzhengma = True
-        print "finish input yanzhengma!! %s" % is_finish_yanzhengma
-    #pythoncom.EnableQuitMessage()
-    return True
+    def onKeyboardEvent(self, event):
+        '''
+        print "MessageName:", event.MessageName
+        print "Message:", event.Message
+        print "Time:", event700
+        print "Window:", event.W700
+        print "WindowName:", event.WindowName
+        print "Ascii:", event.Ascii, chr(event.Ascii)
+        print "Key:", event.Key
+        print "KeyID:", event.KeyID
+        print "ScanCode:", event.ScanCode
+        print "Extended:", event.Extended
+        print "Injected:", event.Injected
+        print "Alt", event.Alt
+        print "Transition", event.Transition
+        print "---"
+        '''
+
+        print "input Key:", event.Key
+        global is_finish_yanzhengma
+        if 13 == event.Ascii:
+            is_finish_yanzhengma = True
+            print "finish input yanzhengma!! %s" % is_finish_yanzhengma
+        elif 27 == event.Ascii:
+            print "refresh the identifying code"
+            pyautogui.moveTo(self.position_refresh_yanzhengma[0], self.position_refresh_yanzhengma[1])
+            pyautogui.click()
+        #pythoncom.EnableQuitMessage()
+        return True
 
 def validate_mouse_position(event):
 
@@ -408,28 +413,6 @@ def validate_mouse_position(event):
         is_test_position_finish = False
         print "mouse position is wrong!! need to be corrected %s" % is_test_position_finish
         return False
-
-def getBeijinTime():
-     conn = httplib.HTTPConnection("www.beijing-time.org")
-     conn.request("GET", "/time.asp")
-     response = conn.getresponse()
-     print response.status, response.reason
-     if response.status == 200:
-         result = response.read()
-         data = result.split("\r\n")
-         year = data[1][len("nyear")+1 : len(data[1])-1]
-         month = data[2][len("nmonth")+1 : len(data[2])-1]
-         day = data[3][len("nday")+1 : len(data[3])-1]
-         #wday = data[4][len("nwday")+1 : len(data[4])-1]
-         hrs = data[5][len("nhrs")+1 : len(data[5])-1]
-         minute = data[6][len("nmin")+1 : len(data[6])-1]
-         sec = data[7][len("nsec")+1 : len(data[7])-1]
-
-         beijinTimeStr = "%s/%s/%s %s:%s:%s" % (year, month, day, hrs, minute, sec)
-         print beijinTimeStr
-         #beijinTime = time.strptime(beijinTimeStr, "%Y/%m/%d %X")
-         return beijinTimeStr.decode('gbk').encode('utf-8')
-
 
 if __name__ == '__main__':
     print "test python here"
