@@ -226,8 +226,9 @@ class PaipaiMgr():
             #current_time = getBeijinTime()
             #print "current_time : %s" % current_time
 
-            time_now = time.strftime('%X',time.localtime(time.time()))
-            print "time now:%s" % time_now
+            time_start = datetime.datetime.now()
+            print "time now: %s" % (time_start)
+            time_now = time_start.strftime("%H:%M:%S")
             [hour_now, minute_now, second_now] = time_now.split(":")
 
             price = self.get_current_price(im, self.current_max_price_rangle)
@@ -271,9 +272,15 @@ class PaipaiMgr():
                 print "max_price:" , max_price
 
                 while(int(submit_price) > int(max_price)):
-                    print "submit price %s is bigger than current max price %s, please wait!\n" % (submit_price, max_price)
+                    time_now = datetime.datetime.now()
+                    time_simple = time_now.strftime("%H:%M:%S")
+                    print "(%s) submit price %s is bigger than current max price %s, please wait!\n" % (time_now, submit_price, max_price)
                     im = ImageGrab.grab()
                     max_price = self.get_current_price(im, self.current_max_price_rangle)
+                    #if time_simple > "11:29:55":
+                    if time_now > time_start + datetime.timedelta(seconds=8):
+                        print "********************* time out (%s)!!! we need to submit anyway!!!\n" % datetime.datetime.now()
+                        break
 
                 print "#########################please submit!!!!!!!!!!!!!!!!!!"
                 print "#########################please submit!!!!!!!!!!!!!!!!!!"
